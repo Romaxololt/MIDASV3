@@ -1,0 +1,121 @@
+Les méthodes comme Unquoted Service Paths et Process Hollowing sont des techniques avancées utilisées par les attaquants pour obtenir un contrôle plus profond des systèmes. Voici des explications détaillées de certaines de ces méthodes complexes :
+
+1. Unquoted Service Paths
+
+(Expliqué plus tôt)
+
+2. Process Hollowing
+
+Le Process Hollowing est une technique d'injection de processus avancée utilisée par les attaquants pour cacher un processus malveillant derrière un processus légitime. Voici comment cela fonctionne :
+
+1. Création d'un processus légitime : L'attaquant démarre un processus légitime (par exemple, explorer.exe).
+
+
+2. Vidage de l'espace mémoire du processus : Une fois le processus légitime démarré, l'attaquant vide son espace mémoire. Cela signifie que le processus reste actif, mais son code a été retiré.
+
+
+3. Injection de code malveillant : Ensuite, l'attaquant injecte du code malveillant à la place du code légitime dans la mémoire du processus.
+
+
+4. Exécution du code malveillant : Finalement, le processus légitime est utilisé pour exécuter le code malveillant sous couverture.
+
+
+
+Ce type d'attaque est difficile à détecter car l'antivirus ou les outils de surveillance de sécurité pourraient voir le processus légitime (comme explorer.exe), alors qu'il exécute en réalité du code malveillant.
+
+3. DLL Injection (Injection de DLL)
+
+L'injection de DLL consiste à forcer un programme à charger une DLL malveillante dans son espace d'adressage. Cela permet à l'attaquant d'exécuter du code au sein du processus légitime. Cette technique est souvent utilisée pour contourner les mécanismes de sécurité et injecter du code dans des processus privilégiés.
+
+Technique :
+
+1. Un attaquant crée une DLL contenant du code malveillant.
+
+
+2. Ensuite, il injecte cette DLL dans le processus cible via des méthodes comme CreateRemoteThread ou NtCreateThreadEx pour que le processus exécute le code malveillant de la DLL.
+
+
+
+4. Code Cave (Cavité de Code)
+
+Le Code Cavité consiste à trouver un espace inutilisé dans un exécutable en mémoire et à y injecter du code malveillant. Cela permet à l'attaquant d'exécuter du code sans ajouter de nouveaux segments visibles dans le fichier exécutable.
+
+Étapes :
+
+1. L'attaquant identifie une zone "cave" (vide) dans l'image du programme chargé en mémoire.
+
+
+2. Il injecte du code malveillant dans cette zone.
+
+
+3. Le processus hôte exécute alors le code malveillant à un moment donné, souvent à l'insu des mécanismes de détection classiques.
+
+
+
+5. APC Injection (Asynchronous Procedure Call)
+
+L'APC Injection est une méthode d'injection qui repose sur l'utilisation d'appels de procédure asynchrones. Windows permet aux threads d'invoquer des appels asynchrones, et les attaquants peuvent exploiter cela pour injecter du code dans un processus cible.
+
+Étapes :
+
+1. L'attaquant crée un thread dans le processus cible.
+
+
+2. Ensuite, il utilise l'API QueueUserAPC pour insérer un appel de procédure asynchrone dans le thread cible.
+
+
+3. Lorsque le thread cible reprend son exécution, il exécute l'APC qui contient le code malveillant.
+
+
+
+6. Heaven's Gate
+
+Heaven's Gate est une technique utilisée par les malwares pour exécuter du code 64 bits à partir d'un processus 32 bits sur les systèmes Windows. Cela permet de contourner certaines protections et de rendre la détection plus difficile.
+
+Principe :
+
+Sur les systèmes Windows 64 bits, les processus 32 bits fonctionnent dans un sous-système spécial appelé WOW64. Les attaquants exploitent cela pour passer entre les modes 32 bits et 64 bits, ce qui peut perturber les outils de sécurité qui surveillent uniquement les processus 32 bits.
+
+
+7. Process Doppelgänging
+
+Process Doppelgänging est une technique avancée d'injection de processus qui exploite les fonctionnalités du système de fichiers NTFS pour créer et exécuter un processus malveillant sans toucher le disque dur de manière visible.
+
+Étapes :
+
+1. L'attaquant crée une transaction dans le système de fichiers NTFS pour charger un fichier exécutable dans une transaction temporaire.
+
+
+2. Ensuite, il annule cette transaction après avoir chargé le processus en mémoire, rendant l'exécutable invisible sur le disque.
+
+
+3. Le processus malveillant s'exécute alors sans laisser de traces visibles dans le système de fichiers.
+
+
+
+8. Reflective DLL Injection
+
+Cette méthode permet d'injecter une DLL directement dans la mémoire d'un processus sans que celle-ci soit réellement enregistrée sur le disque dur. Cela complique la détection, car l'injection est entièrement effectuée en mémoire, et la DLL n'apparaît pas dans les fichiers du système.
+
+Étapes :
+
+1. L'attaquant charge la DLL malveillante directement en mémoire.
+
+
+2. Ensuite, il appelle le point d'entrée de la DLL manuellement pour exécuter son code.
+
+
+
+9. Thread Local Storage (TLS) Callbacks Injection
+
+Le TLS Callbacks Injection est une méthode d'injection qui tire parti des callbacks dans les threads locaux. Un attaquant peut ajouter du code malveillant qui sera exécuté lorsque le thread démarre ou termine.
+
+10. Direct Kernel Object Manipulation (DKOM)
+
+DKOM est une technique permettant de manipuler les objets du noyau directement, afin de masquer la présence de processus ou de manipuler d'autres objets du noyau. Cette technique permet d'éviter les détections de sécurité en modifiant les structures de données du noyau, rendant un processus ou un objet difficile à détecter par les outils de sécurité.
+
+
+---
+
+Ces méthodes sont beaucoup plus sophistiquées que des attaques classiques et nécessitent une connaissance approfondie du fonctionnement interne des systèmes d'exploitation. Elles sont souvent utilisées par des attaquants avancés pour pénétrer ou rester furtivement dans un système.
+
